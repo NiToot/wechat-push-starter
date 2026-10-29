@@ -1,0 +1,3 @@
+请先阅读 README.md。
+本包不含真实账号与收件人，默认不定时运行、不自动发送。
+密钥在自己的GitHub仓库Secrets中设置，收件人等参数在WechatConfig.java填写。

@@ -1,0 +1,8 @@
+昵称：{{userName.DATA}}
+日期：{{date.DATA}}
+星期：{{week.DATA}}
+今日诗句：{{randomInfo.DATA}}
+今天白天：{{weatherTodayDay.DATA}}
+今天晚上：{{weatherTodayNight.DATA}}
+明天白天：{{weatherTomorrowDay.DATA}}
+明天晚上：{{weatherTomorrowNight.DATA}}

@@ -1,0 +1,13 @@
+今天是在一起的第{{loveDays.DATA}}天
+本人生日还有{{birthdayLeft.DATA}}天
+对方生日还有{{partnerBirthdayLeft.DATA}}天
+距离下一次纪念日还有{{anniversaryLeft.DATA}}天
+
+昵称：{{userName.DATA}}
+日期：{{date.DATA}}
+星期：{{week.DATA}}
+今日诗句：{{randomInfo.DATA}}
+今天白天：{{weatherTodayDay.DATA}}
+今天晚上：{{weatherTodayNight.DATA}}
+明天白天：{{weatherTomorrowDay.DATA}}
+明天晚上：{{weatherTomorrowNight.DATA}}

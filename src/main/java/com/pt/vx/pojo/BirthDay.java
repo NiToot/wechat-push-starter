@@ -1,0 +1,91 @@
+package com.pt.vx.pojo;
+
+public class BirthDay {
+
+    private int year;
+    private int month;
+    private int day;
+
+    private boolean chineseFlag;
+
+    private boolean countFlag;
+
+    private String info;
+
+    public BirthDay(){
+
+    }
+
+    public BirthDay(int year, int month, int day) {
+        this.year = year;
+        this.month = month;
+        this.day = day;
+        this.chineseFlag = true;
+        this.countFlag = true;
+
+    }
+    public BirthDay(int year, int month, int day, boolean chineseFlag, boolean countFlag) {
+        this.year = year;
+        this.month = month;
+        this.day = day;
+        this.chineseFlag = chineseFlag;
+        this.countFlag = countFlag;
+
+    }
+    public BirthDay(int year, int month, int day, boolean chineseFlag, boolean countFlag,String info) {
+        this.year = year;
+        this.month = month;
+        this.day = day;
+        this.chineseFlag = chineseFlag;
+        this.countFlag = countFlag;
+        this.info = info;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
+    }
+
+    public boolean isChineseFlag() {
+        return chineseFlag;
+    }
+
+    public void setChineseFlag(boolean chineseFlag) {
+        this.chineseFlag = chineseFlag;
+    }
+
+    public boolean isCountFlag() {
+        return countFlag;
+    }
+
+    public void setCountFlag(boolean countFlag) {
+        this.countFlag = countFlag;
+    }
+}
