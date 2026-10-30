@@ -37,11 +37,13 @@ public class PortableMessageTest extends OfflineTest {
         for(User profile:Arrays.asList(basic,birthday,couple)){
             Map<String,DataInfo> data=build(profile);
             String name=new String[]{"basic","birthday","couple"}[index++];
-            String template=new String(java.nio.file.Files.readAllBytes(java.nio.file.Paths.get("templates",name+".txt")),java.nio.charset.StandardCharsets.UTF_8);
-            java.util.regex.Matcher m=java.util.regex.Pattern.compile("\\{\\{([A-Za-z0-9]+)\\.DATA\\}\\}").matcher(template);
-            while(m.find())assertNotNull("Missing field "+m.group(1),data.get(m.group(1)));
-            assertTrue(template.indexOf("{{randomInfo.DATA}}")<template.indexOf("{{weatherTodayDay.DATA}}"));
-            assertFalse(template.contains("{{otherInfo"));
+            for (String suffix : new String[]{".txt", ".en.txt"}) {
+                String template=new String(java.nio.file.Files.readAllBytes(java.nio.file.Paths.get("templates",name+suffix)),java.nio.charset.StandardCharsets.UTF_8);
+                java.util.regex.Matcher m=java.util.regex.Pattern.compile("\\{\\{([A-Za-z0-9]+)\\.DATA\\}\\}").matcher(template);
+                while(m.find())assertNotNull("Missing field "+m.group(1),data.get(m.group(1)));
+                assertTrue(template.indexOf("{{randomInfo.DATA}}")<template.indexOf("{{weatherTodayDay.DATA}}"));
+                assertFalse(template.contains("{{otherInfo"));
+            }
         }
     }
     @Test public void invalidDateCannotProduceAPartialPayload(){InvocationTargetException e=assertThrows(InvocationTargetException.class,()->build(user(new BirthDay(2000,13,1,false,false))));assertTrue(e.getCause() instanceof IllegalStateException);}

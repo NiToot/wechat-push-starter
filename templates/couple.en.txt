@@ -1,0 +1,13 @@
+Together for {{loveDays.DATA}} days
+Your birthday in {{birthdayLeft.DATA}} days
+Partner's birthday in {{partnerBirthdayLeft.DATA}} days
+Next anniversary in {{anniversaryLeft.DATA}} days
+
+Name: {{userName.DATA}}
+Date: {{date.DATA}}
+Weekday: {{week.DATA}}
+Poem: {{randomInfo.DATA}}
+Today (day): {{weatherTodayDay.DATA}}
+Today (night): {{weatherTodayNight.DATA}}
+Tomorrow (day): {{weatherTomorrowDay.DATA}}
+Tomorrow (night): {{weatherTomorrowNight.DATA}}

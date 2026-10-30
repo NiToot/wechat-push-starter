@@ -10,25 +10,25 @@ A small Java application you can run in your own GitHub repository to send local
 
 ## Preview
 
-These illustrations use fictional information. They are not phone screenshots and do not guarantee that WeChat will preserve colors, introductory text, or closing text. Message templates and preview images are in Chinese; this guide explains deployment in English.
+These illustrations use fictional information. They are not phone screenshots and do not guarantee that WeChat will preserve colors, introductory text, or closing text. The previews use translated English example values. English templates translate fixed labels only: the current application still supplies Chinese weather descriptions, weekday values, and Chinese poetry. These templates do not enable automatic translation of API data.
 
 ### Weather and poetry
 
-![Weather and poetry illustration](docs/images/preview-basic.png)
+![Weather and poetry illustration](docs/images/preview-basic-en.png)
 
-Use the [basic template](templates/basic.txt). No birthday configuration is required.
+Use the [basic template](templates/basic.en.txt). No birthday configuration is required.
 
 ### Birthday reminder
 
-![Birthday reminder illustration](docs/images/preview-birthday.png)
+![Birthday reminder illustration](docs/images/preview-birthday-en.png)
 
-Use the [birthday template](templates/birthday.txt) and configure one birthday.
+Use the [birthday template](templates/birthday.en.txt) and configure one birthday.
 
 ### Couple's anniversary
 
-![Couple's anniversary illustration](docs/images/preview-couple.png)
+![Couple's anniversary illustration](docs/images/preview-couple-en.png)
 
-Use the [couple template](templates/couple.txt). Configure your birthday, your partner's birthday, an elapsed-day anniversary, and an annual anniversary countdown in that order. The numbers in the image only illustrate the layout.
+Use the [couple template](templates/couple.en.txt). Configure your birthday, your partner's birthday, an elapsed-day anniversary, and an annual anniversary countdown in that order. The numbers in the image only illustrate the layout.
 
 ## What to configure
 
@@ -85,9 +85,9 @@ Reference: [GitHub documentation on Secrets](https://docs.github.com/en/actions/
 
 For your first test, configure only yourself and use the basic template:
 
-1. Open [templates/basic.txt](templates/basic.txt) and copy the entire contents.
+1. Open [templates/basic.en.txt](templates/basic.en.txt) and copy the entire contents.
 2. In the WeChat sandbox dashboard, select “新增测试模板” (add a test template).
-3. Enter a title such as “每日天气与诗句” (daily weather and poetry), paste the body, and save.
+3. Enter a title such as “Daily Weather & Poetry”, paste the body, and save.
 4. Copy the generated template ID into the recipient configuration in the next step.
 
 Keep placeholders such as `{{userName.DATA}}` unchanged, including capitalization. Nickname, date, and weekday use separate labeled lines in the body, and poetry appears before weather. Do not restore unlabeled remarks.
@@ -131,11 +131,11 @@ userList.add(getUser(
 ));
 ```
 
-Use [birthday.txt](templates/birthday.txt) in WeChat. `false, false` means a Gregorian birthday countdown. For a Chinese lunar birthday, change the first boolean to `true`.
+Use [birthday.en.txt](templates/birthday.en.txt) in WeChat. `false, false` means a Gregorian birthday countdown. For a Chinese lunar birthday, change the first boolean to `true`.
 
 ### Two birthdays and an anniversary
 
-Use [couple.txt](templates/couple.txt) and keep the dates in this order. All dates below are fictional; **replace every date with your own**:
+Use [couple.en.txt](templates/couple.en.txt) and keep the dates in this order. All dates below are fictional; **replace every date with your own**:
 
 ```java
 userList.add(getUser(
@@ -227,7 +227,7 @@ The first build needs internet access to download Maven dependencies. `mvn packa
 - **Error 43004**: the configured OpenID typically has not followed this sandbox account. Verify subscription status for the same account before rerunning a multi-recipient job.
 - **Error 40037**: verify that the complete template ID belongs to the current sandbox account.
 - **Amap 10009 / USERKEY_PLAT_NOMATCH**: check that the key is a Web Service key with the required service permissions.
-- **Missing nickname, date, or poem**: compare the WeChat template body with the corresponding local template. Keep the fixed Chinese labels and place poetry before weather. API acceptance does not guarantee complete phone display.
+- **Missing nickname, date, or poem**: compare the WeChat template body with the corresponding local template. Keep the fixed English labels and place poetry before weather. API acceptance does not guarantee complete phone display.
 - **Colors do not change**: random color parameters are retained, but WeChat clients may use default colors. Custom colors are not guaranteed.
 - **An Actions run partially fails**: inspect each recipient's result. Successful recipients may already have received messages. Do not rerun the entire job to retry failures, especially when delivery status is uncertain.
 - **Scheduled messages arrive late**: check the default branch, whether Actions is enabled, and workflow logs. GitHub scheduling can be delayed.

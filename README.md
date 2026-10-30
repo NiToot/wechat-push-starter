@@ -30,6 +30,8 @@
 
 对应 [双人模板](templates/couple.txt)，需要依次填写本人生日、对方生日、累计纪念日、周年倒计时。图中数值仅用于展示排版。
 
+英文版素材：[基础模板](templates/basic.en.txt) · [生日模板](templates/birthday.en.txt) · [双人模板](templates/couple.en.txt)。英文标签不会自动翻译接口返回的中文天气、星期和古诗；英文示例图中的动态内容为译文示意。
+
 ## 需要修改什么
 
 只有两处必须适配：
