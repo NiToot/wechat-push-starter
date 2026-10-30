@@ -6,6 +6,17 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 public class WechatConfigTest extends OfflineTest {
     private User user(){User u=new User();u.setVx("fixture-openid");u.setTemplateId("fixture-template");u.setUserName("示例用户");u.setAddress("示例省示例市示例区");u.setCity("示例市");return u;}
+    @Test public void invalidLanguageFailsBeforeCredentialsOrNetwork() {
+        String previous = MainConfig.messageLanguage;
+        try {
+            for (String invalid : new String[]{null, "", "EN", "fr"}) {
+                MainConfig.messageLanguage = invalid;
+                IllegalArgumentException error = assertThrows(IllegalArgumentException.class,
+                    () -> WechatConfig.validateValues("", "", "", Collections.emptyList()));
+                assertTrue(error.getMessage().contains("messageLanguage"));
+            }
+        } finally { MainConfig.messageLanguage = previous; }
+    }
     @Test public void acceptsCompleteConfiguration(){WechatConfig.validateValues("fixture-app","fixture-secret","fixture-key",Collections.singletonList(user()));}
     @Test public void missingAppIdFailsBeforeNetwork(){IllegalArgumentException e=assertThrows(IllegalArgumentException.class,()->WechatConfig.validateValues("","secret","key",Collections.singletonList(user())));assertTrue(e.getMessage().contains("WECHAT_APP_ID"));}
     @Test public void missingSecretFailsBeforeNetwork(){assertThrows(IllegalArgumentException.class,()->WechatConfig.validateValues("app"," ","key",Collections.singletonList(user())));}

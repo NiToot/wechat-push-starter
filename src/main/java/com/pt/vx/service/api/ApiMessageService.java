@@ -6,6 +6,7 @@ import com.pt.vx.config.KeyConfig;
 import com.pt.vx.pojo.KeyDTO;
 import com.pt.vx.pojo.User;
 import com.pt.vx.utils.HttpUtil;
+import com.pt.vx.utils.MessageLanguage;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import java.security.SecureRandom;
@@ -18,10 +19,20 @@ public class ApiMessageService {
     private static final String[] LOCAL_MESSAGES = {
         "海上生明月，天涯共此时。", "愿君多采撷，此物最相思。", "明月松间照，清泉石上流。"
     };
+    // Original English micro-poems; no translation API or third-party credentials required.
+    private static final String[] ENGLISH_MESSAGES = {
+        "Dawn lifts the mist; a quiet hope takes wing.",
+        "Rain leaves the leaves; the morning learns to shine.",
+        "Across the dusk, one window keeps a little sun."
+    };
     public static List<KeyDTO> keyDTOS = new ArrayList<>(Collections.singletonList(KeyConfig.KEY_POEM));
-    public static String getLocalMessage() { return LOCAL_MESSAGES[RANDOM.nextInt(LOCAL_MESSAGES.length)]; }
+    public static String getLocalMessage() {
+        String[] messages = MessageLanguage.english() ? ENGLISH_MESSAGES : LOCAL_MESSAGES;
+        return messages[RANDOM.nextInt(messages.length)];
+    }
     public KeyDTO getRandomKey() { return KeyConfig.KEY_POEM.isOpen() ? KeyConfig.KEY_POEM : null; }
     public String getApiMessage(KeyDTO key, User user) {
+        if (MessageLanguage.english()) return getLocalMessage();
         if (key == null || !KeyConfig.KEY_POEM.equalsKey(key)) return getLocalMessage();
         try {
             JSONObject poem = JSONUtil.parseObj(HttpUtil.get("https://v1.jinrishici.com/all.json"));

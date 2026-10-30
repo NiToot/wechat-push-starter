@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainConfig {
+    /** 全局消息语言：zh 中文（默认），en English。请同时使用对应语言的微信模板。 */
+    public static String messageLanguage = "zh";
+
     /**
      * 消息模式
      * 0 正常模式

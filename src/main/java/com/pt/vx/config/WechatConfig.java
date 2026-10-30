@@ -30,6 +30,7 @@ public class WechatConfig {
     }
 
     static void validateValues(String appId, String secret, String weatherKey, List<User> users) {
+        com.pt.vx.utils.MessageLanguage.english(); // Validate before any network or send.
         require(appId, "WECHAT_APP_ID");
         require(secret, "WECHAT_APP_SECRET");
         if (WeatherConfig.OPEN) require(weatherKey, "AMAP_KEY");

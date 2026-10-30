@@ -17,6 +17,7 @@ import com.pt.vx.service.api.ApiMessageService;
 import com.pt.vx.service.weather.WeatherAdapter;
 import com.pt.vx.service.weather.WeatherService;
 import com.pt.vx.utils.DateUtil;
+import com.pt.vx.utils.MessageLanguage;
 import com.pt.vx.utils.ThreadPoolUtil;
 import com.pt.vx.utils.VxUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -68,7 +69,7 @@ public class MessageService {
         apiInfoList.add(birthFuture);
 
         if (WeatherConfig.OPEN) {
-            setMap(map, KeyConfig.KEY_WEATHER_INFO, "天气暂时获取失败，出门前记得查看天气。");
+            setMap(map, KeyConfig.KEY_WEATHER_INFO, MessageLanguage.text("天气暂时获取失败，出门前记得查看天气。", "Weather unavailable; check before going out."));
             setShortWeatherFallbacks(map);
             CompletableFuture<List<BaseWeather>> weatherFuture = buildWeatherFuture(map, user);
             CompletableFuture<Void> buildWeatherInfoFuture = buildWeatherOtherInfoFuture(weatherFuture,birthFuture,map);
@@ -117,7 +118,7 @@ public class MessageService {
 
     private CompletableFuture<Void> buildBirthFuture(Map<String, DataInfo> map, User user) {
         return CompletableFuture.runAsync(() -> {
-            setMap(map, KeyConfig.KEY_USER_NAME, StringUtils.defaultIfBlank(user.getUserName(), "朋友"));
+            setMap(map, KeyConfig.KEY_USER_NAME, StringUtils.defaultIfBlank(user.getUserName(), MessageLanguage.text("朋友", "Friend")));
             BirthDay[] birthDays = user.getBirthDays();
             if (birthDays == null) return;
             for (int i = 0; i < birthDays.length; i++) {
@@ -158,7 +159,7 @@ public class MessageService {
             LocalDate today = LocalDate.now();
             for (int i = 0; i < 5; i++) {
                 LocalDate now = today.plusDays(i);
-                String week = DateUtil.getWeek(now, MainConfig.chineseWeek);
+                String week = MessageLanguage.week(now);
                 String date = now.toString();
                 setMap(map, KeyConfig.KEY_DATE, date, i);
                 setMap(map, KeyConfig.KEY_WEEK, week, i);
@@ -174,12 +175,12 @@ public class MessageService {
                 if (Objects.equals(0, WeatherConfig.getWeatherType)) {
                     //实时天气
                     BaseWeather weatherNow = weatherService.getWeatherNow(user.getAddress(), user.getCity());
-                    summary.append(weatherLine("当前天气", weatherNow));
-                    setMap(map, KeyConfig.KEY_WEATHER_NOW, weatherNow.getInfo());
+                    summary.append(weatherLine(MessageLanguage.text("当前天气", "Current weather"), weatherNow));
+                    setMap(map, KeyConfig.KEY_WEATHER_NOW, MessageLanguage.condition(weatherNow.getInfo()));
                     setMap(map, KeyConfig.KEY_HUMIDITY_NOW, weatherNow.getHumidity());
                     setMap(map, KeyConfig.KEY_TEMPERATURE_NOW, weatherNow.getTemperature());
-                    setMap(map, KeyConfig.KEY_WIND_NOW, weatherNow.getWind());
-                    setMap(map, KeyConfig.KEY_POWER_NOW, weatherNow.getPower());
+                    setMap(map, KeyConfig.KEY_WIND_NOW, MessageLanguage.wind(weatherNow.getWind()));
+                    setMap(map, KeyConfig.KEY_POWER_NOW, MessageLanguage.power(weatherNow.getPower()));
                     list.add(weatherNow);
                     //buildWeatherOtherInfo(map, weatherNow);
                 } else {
@@ -193,25 +194,25 @@ public class MessageService {
                                 forecastDate.equals(LocalDate.now().plusDays(1)) ? "明天" : null;
                         if (label != null) {
                             if (summary.length() > 0) summary.append("\n");
-                            summary.append(weatherLine(label + "白天", weather.getWeatherDay()));
-                            summary.append("\n").append(weatherLine(label + "晚上", weather.getWeatherNight()));
+                            summary.append(weatherLine(MessageLanguage.text(label + "白天", forecastDate.equals(LocalDate.now()) ? "Today (day)" : "Tomorrow (day)"), weather.getWeatherDay()));
+                            summary.append("\n").append(weatherLine(MessageLanguage.text(label + "晚上", forecastDate.equals(LocalDate.now()) ? "Today (night)" : "Tomorrow (night)"), weather.getWeatherNight()));
                             boolean today = forecastDate.equals(LocalDate.now());
                             setMap(map, today ? KeyConfig.KEY_WEATHER_TODAY_DAY : KeyConfig.KEY_WEATHER_TOMORROW_DAY,
                                     shortWeatherValue(weather.getWeatherDay()));
                             setMap(map, today ? KeyConfig.KEY_WEATHER_TODAY_NIGHT : KeyConfig.KEY_WEATHER_TOMORROW_NIGHT,
                                     shortWeatherValue(weather.getWeatherNight()));
                         }
-                        setMap(map, KeyConfig.KEY_POWER_DAY, weather.getWeatherDay().getPower(), i);
+                        setMap(map, KeyConfig.KEY_POWER_DAY, MessageLanguage.power(weather.getWeatherDay().getPower()), i);
                         setMap(map, KeyConfig.KEY_TEMPERATURE_DAY, weather.getWeatherDay().getTemperature(), i);
-                        setMap(map, KeyConfig.KEY_WEATHER_DAY, weather.getWeatherDay().getInfo(), i);
-                        setMap(map, KeyConfig.KEY_WIND_DAY, weather.getWeatherDay().getWind(), i);
-                        setMap(map, KeyConfig.KEY_POWER_DAY, weather.getWeatherDay().getPower(), i);
+                        setMap(map, KeyConfig.KEY_WEATHER_DAY, MessageLanguage.condition(weather.getWeatherDay().getInfo()), i);
+                        setMap(map, KeyConfig.KEY_WIND_DAY, MessageLanguage.wind(weather.getWeatherDay().getWind()), i);
+                        setMap(map, KeyConfig.KEY_POWER_DAY, MessageLanguage.power(weather.getWeatherDay().getPower()), i);
 
-                        setMap(map, KeyConfig.KEY_POWER_NIGHT, weather.getWeatherNight().getPower(), i);
+                        setMap(map, KeyConfig.KEY_POWER_NIGHT, MessageLanguage.power(weather.getWeatherNight().getPower()), i);
                         setMap(map, KeyConfig.KEY_TEMPERATURE_NIGHT, weather.getWeatherNight().getTemperature(), i);
-                        setMap(map, KeyConfig.KEY_WEATHER_NIGHT, weather.getWeatherNight().getInfo(), i);
-                        setMap(map, KeyConfig.KEY_WIND_NIGHT, weather.getWeatherNight().getWind(), i);
-                        setMap(map, KeyConfig.KEY_POWER_NIGHT, weather.getWeatherNight().getPower(), i);
+                        setMap(map, KeyConfig.KEY_WEATHER_NIGHT, MessageLanguage.condition(weather.getWeatherNight().getInfo()), i);
+                        setMap(map, KeyConfig.KEY_WIND_NIGHT, MessageLanguage.wind(weather.getWeatherNight().getWind()), i);
+                        setMap(map, KeyConfig.KEY_POWER_NIGHT, MessageLanguage.power(weather.getWeatherNight().getPower()), i);
 
                         if (i == 0) {
                             setMap(map, KeyConfig.KEY_SUN_RISE, weather.getSunUp());
@@ -237,12 +238,20 @@ public class MessageService {
     }
 
     private String weatherLine(String label, BaseWeather weather) {
-        return label + "：" + weatherValue(weather);
+        return label + MessageLanguage.text("：", ": ") + weatherValue(weather);
     }
 
     private String weatherValue(BaseWeather weather) {
         if (weather == null || StringUtils.isBlank(weather.getInfo()) || StringUtils.isBlank(weather.getTemperature())) {
             throw new IllegalStateException("天气字段不完整");
+        }
+        if (MessageLanguage.english()) {
+            String value = MessageLanguage.condition(weather.getInfo()) + ", " + weather.getTemperature() + " Celsius";
+            if (StringUtils.isNotBlank(weather.getWind())) {
+                value += ", " + MessageLanguage.wind(weather.getWind()) + " wind";
+                if (StringUtils.isNotBlank(weather.getPower())) value += " force " + MessageLanguage.power(weather.getPower());
+            }
+            return value;
         }
         String line = weather.getInfo() + "，" + weather.getTemperature() + "摄氏度";
         if (StringUtils.isNotBlank(weather.getWind())) {
@@ -256,6 +265,7 @@ public class MessageService {
 
     private String shortWeatherValue(BaseWeather weather) {
         String value = weatherValue(weather).replace('\n', ' ').replace('\r', ' ');
+        if (MessageLanguage.english()) return StringUtils.abbreviate(value, 100);
         if (value.length() > 20) value = weather.getInfo() + "，" + weather.getTemperature() + "摄氏度";
         return StringUtils.abbreviate(value, 20);
     }
@@ -263,7 +273,7 @@ public class MessageService {
     private void setShortWeatherFallbacks(Map<String, DataInfo> map) {
         for (KeyDTO key : new KeyDTO[]{KeyConfig.KEY_WEATHER_TODAY_DAY, KeyConfig.KEY_WEATHER_TODAY_NIGHT,
                 KeyConfig.KEY_WEATHER_TOMORROW_DAY, KeyConfig.KEY_WEATHER_TOMORROW_NIGHT}) {
-            setMap(map, key, "天气暂不可用");
+            setMap(map, key, MessageLanguage.text("天气暂不可用", "Weather unavailable"));
         }
     }
 
@@ -303,12 +313,12 @@ public class MessageService {
                 boolean isLess = key.startsWith("<") && temperatureNow < temperatureKey;
                 boolean isEqual = key.startsWith("=") && temperatureNow == temperatureKey;
                 if (isGreater || isLess || isEqual) {
-                    setMapExist(map, KeyConfig.KEY_OTHER_INFO, weatherOtherInfo.getMessage());
+                    setMapExist(map, KeyConfig.KEY_OTHER_INFO, MessageLanguage.advisory(weatherOtherInfo.getMessage()));
                 }
             } else if (Objects.equals(weatherOtherInfo.getType(), 1)) {
                 String info = weather.getInfo();
                 if (info.contains(key)) {
-                    setMapExist(map, KeyConfig.KEY_OTHER_INFO, weatherOtherInfo.getMessage());
+                    setMapExist(map, KeyConfig.KEY_OTHER_INFO, MessageLanguage.advisory(weatherOtherInfo.getMessage()));
                 }
             }
 

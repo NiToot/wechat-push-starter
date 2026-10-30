@@ -10,7 +10,7 @@ A small Java application you can run in your own GitHub repository to send local
 
 ## Preview
 
-These illustrations use fictional information. They are not phone screenshots and do not guarantee that WeChat will preserve colors, introductory text, or closing text. The previews use translated English example values. English templates translate fixed labels only: the current application still supplies Chinese weather descriptions, weekday values, and Chinese poetry. These templates do not enable automatic translation of API data.
+These illustrations use fictional information. They are not phone screenshots and do not guarantee that WeChat will preserve colors, introductory text, or closing text. The English previews illustrate English mode with fictional data. Set `MainConfig.messageLanguage` to `"en"` and use an English template to produce English weekdays, weather, and random micro-poems. Phone display has not been verified by a real send.
 
 ### Weather and poetry
 
@@ -38,6 +38,25 @@ Two places require your own settings:
 - **[WechatConfig.java](src/main/java/com/pt/vx/config/WechatConfig.java)**: each recipient's OpenID, template ID, nickname, detailed region, city, and optional dates.
 
 You do not need to change the sending service, weather parser, or poetry API. Use your own credentials, OpenIDs, and template IDs.
+
+## Choose Chinese or English
+
+Set the global language in [MainConfig.java](src/main/java/com/pt/vx/config/MainConfig.java):
+
+```java
+public static String messageLanguage = "en"; // English
+// The shipped default is "zh" (Chinese).
+```
+
+- `zh`: use `templates/basic.txt`, `birthday.txt`, or `couple.txt`. Chinese poetry continues to use the existing public API, with local Chinese fallback poems.
+- `en`: use `templates/basic.en.txt`, `birthday.en.txt`, or `couple.en.txt`. Weekdays use full English names such as `Monday`. Weather uses English conditions, `Celsius`, and English wind directions. English mode overrides the legacy `chineseWeek` option; Chinese mode retains it.
+- English poems are randomly selected from three original English micro-poems bundled in the code. They are not automatic translations of Chinese poems. English mode calls neither the Chinese poetry API nor a translation API and requires no additional key. Random selections may repeat.
+- A local dictionary translates [Amap weather conditions](https://lbs.amap.com/api/webservice/guide/tools/weather-code). Unrecognized conditions become `Unknown conditions`, unrecognized wind directions become `Unspecified`, and failed weather requests display `Weather unavailable`. Region and city inputs should still use Chinese names for Amap geocoding.
+- The setting applies to all recipients, not individual profiles. When switching, create the matching language templates in WeChat and update each template ID in `WechatConfig.java`. Changing the setting does not modify fixed labels in existing WeChat templates.
+- User-entered nicknames, regions, and custom birthday notes are not automatically translated. Built-in weather advisories have English versions; write other custom text in the desired language yourself. Logs and configuration errors are not fully localized.
+- Only the exact lowercase values `zh` and `en` are accepted. Invalid values fail configuration validation before sending.
+
+English weather values retain up to 100 characters instead of the Chinese 20-character shortening rule, preserving normal English forecasts and wind information. Preview data is fictional; English templates have not been tested by sending a real WeChat message.
 
 ## Step 1: Prepare your accounts
 
@@ -236,7 +255,7 @@ The first build needs internet access to download Maven dependencies. `mvn packa
 
 The starter retains weather parsing, lunar birthdays, Gregorian anniversaries, complete message-field assembly, short-poem fallback, and job failure when any recipient fails. WeChat POST requests are not automatically retried to avoid duplicate sending after a timeout.
 
-Only the [public Chinese poetry API](https://github.com/xenv/gushici), which requires no personal API key, is retained. Historical built-in keys for other text APIs have been removed. No admin interface, database, Docker setup, or other unnecessary components have been added.
+Chinese mode retains the [public Chinese poetry API](https://github.com/xenv/gushici), which requires no personal API key. English mode uses bundled original micro-poems. Historical built-in keys for other text APIs have been removed. No admin interface, database, Docker setup, or other unnecessary components have been added.
 
 Local offline tests, packaging, empty-configuration checks, and a personal-data scan have been completed. Services and templates have not been created for new accounts, and no real GitHub send has been performed for this generic package. See the [validation notes (Chinese)](docs/validation.md).
 

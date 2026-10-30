@@ -30,7 +30,7 @@
 
 对应 [双人模板](templates/couple.txt)，需要依次填写本人生日、对方生日、累计纪念日、周年倒计时。图中数值仅用于展示排版。
 
-英文版素材：[基础模板](templates/basic.en.txt) · [生日模板](templates/birthday.en.txt) · [双人模板](templates/couple.en.txt)。英文标签不会自动翻译接口返回的中文天气、星期和古诗；英文示例图中的动态内容为译文示意。
+英文版素材：[基础模板](templates/basic.en.txt) · [生日模板](templates/birthday.en.txt) · [双人模板](templates/couple.en.txt)。将 `MainConfig.messageLanguage` 设为 `"en"` 后，星期、天气和随机短诗也会使用英文；详见下方语言配置。
 
 ## 需要修改什么
 
@@ -40,6 +40,25 @@
 - **[WechatConfig.java](src/main/java/com/pt/vx/config/WechatConfig.java)**：填写每位收件人的 OpenID、模板 ID、昵称、详细地区、城市，以及可选日期。
 
 不用修改发送服务、天气解析或诗句接口，也不要复用别人的密钥、OpenID、模板 ID。
+
+## 选择中文或英文
+
+在 [MainConfig.java](src/main/java/com/pt/vx/config/MainConfig.java) 设置全局语言：
+
+```java
+public static String messageLanguage = "zh"; // 中文（默认）
+// 改为 "en"，启用英文星期、天气和随机短诗。
+```
+
+- `zh`：使用 `templates/basic.txt`、`birthday.txt` 或 `couple.txt`；中文诗句继续调用现有古诗接口，失败时使用本地中文短诗。
+- `en`：使用 `templates/basic.en.txt`、`birthday.en.txt` 或 `couple.en.txt`；星期为 `Monday` 等完整英文名称，天气为英文描述、`Celsius` 温度和英文风向。英文模式忽略旧的 `chineseWeek` 开关，中文模式仍保留该开关。
+- 英文诗句从代码内三句原创英文短诗中随机选择，不是中文古诗的自动翻译，不调用中文诗句或额外翻译接口，无需新增密钥；随机结果可能重复。
+- 天气使用本地词表翻译[高德天气现象](https://lbs.amap.com/api/webservice/guide/tools/weather-code)。未知现象显示 `Unknown conditions`，未知风向显示 `Unspecified`；接口失败显示 `Weather unavailable`。地区和城市仍按高德地理编码要求填写中文。
+- 此配置对全部收件人生效，不是按收件人单独设置。切换时需在微信后台新建对应语言的模板，并把各人的模板 ID 更新到 `WechatConfig.java`；只改语言配置不会修改微信后台的固定标签。
+- 昵称、地区、生日自定义备注等用户填写的文字不会自动翻译。内置天气提醒已提供英文；其他自定义文字请自行使用目标语言填写。日志和配置错误提示不全部英文化。
+- 仅支持精确的小写 `zh` 或 `en`，其他值会在配置检查时失败，阻止发送。
+
+英文天气字段保留至多100字符，避免沿用中文20字符裁剪而丢失英文温度或风向。示例图展示虚构数据；英文模板未实际发送验证，手机显示以微信客户端为准。
 
 ## 第一步：准备自己的账号
 
@@ -238,7 +257,7 @@ java -jar target/VxMessageActions-1.0-SNAPSHOT.jar
 
 保留天气解析、农历生日、公历纪念日、完整字段组装、随机短诗兜底，以及“部分发送失败则整次任务失败”的行为。微信发送 POST 不自动重试，避免超时后重复发送。
 
-通用版仅保留无需个人密钥的 [古诗词公开接口](https://github.com/xenv/gushici)，不携带历史情话／段子接口的内置密钥。没有添加后台页面、数据库、Docker 或其他非必要组件。
+中文诗句保留无需个人密钥的 [古诗词公开接口](https://github.com/xenv/gushici)，英文模式使用本地原创短诗；不携带历史情话／段子接口的内置密钥。没有添加后台页面、数据库、Docker 或其他非必要组件。
 
 本包已完成本地离线测试、打包、空配置拦截及个人信息扫描；未替新账号注册服务、创建模板或在 GitHub 实发。具体结果见 [验证说明](docs/validation.md)。
 
