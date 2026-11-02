@@ -8,6 +8,8 @@ A small Java application you can run in your own GitHub repository to send local
 
 [Start deployment](#step-1-prepare-your-accounts) · [Configure a recipient](#step-5-configure-one-recipient) · [Troubleshooting](#troubleshooting)
 
+[Template field reference](docs/template-fields.md)
+
 ## Preview
 
 These illustrations use fictional information. They are not phone screenshots and do not guarantee that WeChat will preserve colors, introductory text, or closing text. The English previews illustrate English mode with fictional data. Set `MainConfig.messageLanguage` to `"en"` and use an English template to produce English weekdays, weather, and random micro-poems. Phone display has not been verified by a real send.
