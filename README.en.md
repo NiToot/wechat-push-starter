@@ -2,9 +2,13 @@
 
 [中文](README.md) | **English**
 
+[![Offline tests](https://github.com/NiToot/wechat-push-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/NiToot/wechat-push-starter/actions/workflows/ci.yml)
+
 A small Java application you can run in your own GitHub repository to send local weather forecasts, random Chinese poetry, and optional birthday and anniversary reminders through WeChat.
 
 **Original account details, recipients, and personal dates have been removed. Scheduled sending is disabled by default. Manual workflow runs check configuration without sending unless you explicitly enable sending.**
+
+The `Offline tests` workflow builds and tests pushes and pull requests without account configuration or Secrets. Actual sending uses the separate `WeChat weather and poem` workflow.
 
 [Start deployment](#step-1-prepare-your-accounts) · [Configure a recipient](#step-5-configure-one-recipient) · [Troubleshooting](#troubleshooting)
 
@@ -191,6 +195,8 @@ userList.add(getUser(
 6. Check each recipient's phone for the nickname, date, weekday, poem, and all four weather forecasts.
 
 Configuration validation checks required fields and duplicate recipients without contacting WeChat, Amap, or the poetry service. **It does not prove that API permissions, template IDs, or subscription status are valid.**
+
+Tokens are cached according to the returned `expires_in` value and refreshed 60 seconds early. Changing the AppID or AppSecret fetches a new token. Missing expiry, blank tokens, or invalid responses stop that send attempt. A timeout or unparseable send response is never retried automatically; check whether the recipient received the message first.
 
 Weather values are daytime and nighttime forecasts for today and tomorrow, not current temperatures. If the poetry API fails, returns incomplete data, or returns text that is too long, a short local poem is used. Random poems may repeat.
 

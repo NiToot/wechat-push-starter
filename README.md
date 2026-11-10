@@ -2,9 +2,13 @@
 
 **中文** | [English](README.en.md)
 
+[![离线测试](https://github.com/NiToot/wechat-push-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/NiToot/wechat-push-starter/actions/workflows/ci.yml)
+
 一份可以放到自己 GitHub 仓库运行的 Java 小工具：每天推送所在地区的天气、随机古诗，以及可选的生日和纪念日提醒。
 
 **本包已清空原账号、收件人和个人日期。默认关闭定时，手动运行默认只检查、不发送。**
+
+提交代码或创建 PR 时，`Offline tests` 工作流会自动运行测试并打包，无需配置账号或 Secrets。实际推送仍使用单独的 `WeChat weather and poem` 工作流。
 
 [直接开始部署](#第一步准备自己的账号) · [填写收件人](#第五步填写一位收件人) · [常见问题](#常见问题)
 
@@ -193,6 +197,8 @@ userList.add(getUser(
 6. 核对每位收件人的手机：昵称、日期、星期、诗句和四项天气是否显示完整。
 
 配置检查只验证字段是否填写、收件人是否重复，不访问微信、高德或诗句接口，**不证明 Key 权限、模板 ID 有效或收件人已关注**。
+
+微信 Token 按接口返回的 `expires_in` 缓存，提前 60 秒重新获取；AppID 或 AppSecret 变化时不会复用旧 Token。缺失有效期、空 Token 或无效响应会停止该次发送。发送请求超时或返回无法解析的内容时不会自动重发，先确认手机收件情况，避免重复消息。
 
 天气是今天／明天的白天和夜间预报，不是实时温度。诗句接口失败、字段不全或内容过长时使用本地短诗；随机诗句可能重复。
 

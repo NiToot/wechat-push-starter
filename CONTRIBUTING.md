@@ -67,11 +67,15 @@ An empty-configuration failure from `--check-config` is expected and is not a
 substitute for passing tests. A successful configuration check does not establish
 that real credentials, subscriptions, or dashboard templates work.
 
-The workflow runs only on manual dispatch or an enabled schedule; it has no
-`push` or `pull_request` trigger. Creating a PR alone therefore does not run
-these checks. Manual runs build and validate; sending requires the send option.
-An enabled scheduled run sends to every configured recipient. See
-[maven.yml](.github/workflows/maven.yml) before triggering a run.
+The [Offline tests workflow](.github/workflows/ci.yml) runs on pushes and pull
+requests to `main`. It builds and tests without Secrets, account configuration,
+or a call to the sending entry point. Application network calls are blocked by
+the test guard; Maven may still download dependencies.
+
+The separate [WeChat weather and poem workflow](.github/workflows/maven.yml)
+runs only on manual dispatch or an enabled schedule. Manual runs build and
+validate; sending requires the send option. An enabled scheduled run sends to
+every configured recipient.
 
 ## Prepare a reviewable contribution
 
