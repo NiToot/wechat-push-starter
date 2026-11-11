@@ -269,4 +269,6 @@ java -jar target/VxMessageActions-1.0-SNAPSHOT.jar
 
 本包已完成本地离线测试、打包、空配置拦截及个人信息扫描；未替新账号注册服务、创建模板或在 GitHub 实发。具体结果见 [验证说明](docs/validation.md)。
 
-Actions 使用 [checkout v5](https://github.com/actions/checkout/tree/v5) 与 [setup-java v5](https://github.com/actions/setup-java/tree/v5)，JDK配置为11。工作流本身需在使用者自己的仓库中验证。
+离线测试已在本地 JDK 11 和 GitHub Actions 的 JDK 11 环境通过，可查看 [已通过的运行记录](https://github.com/NiToot/wechat-push-starter/actions/runs/42796211403)。这不代表实际发送已验证：配置自己的账号后，仍需按第六步检查模板和手机收件结果。
+
+Actions 使用 [checkout v5](https://github.com/actions/checkout/tree/v5) 与 [setup-java v5](https://github.com/actions/setup-java/tree/v5)。两个工作流的区别见 [贡献说明](CONTRIBUTING.md#understand-the-execution-boundary)。

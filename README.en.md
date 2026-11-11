@@ -267,4 +267,6 @@ Chinese mode retains the [public Chinese poetry API](https://github.com/xenv/gus
 
 Local offline tests, packaging, empty-configuration checks, and a personal-data scan have been completed. Services and templates have not been created for new accounts, and no real GitHub send has been performed for this generic package. See the [validation notes (Chinese)](docs/validation.md).
 
-Actions uses [checkout v5](https://github.com/actions/checkout/tree/v5), [setup-java v5](https://github.com/actions/setup-java/tree/v5), and JDK 11. Validate the workflow in your own repository.
+Offline tests have passed on local JDK 11 and on JDK 11 in GitHub Actions; see the [successful workflow run](https://github.com/NiToot/wechat-push-starter/actions/runs/42796211403). This does not verify actual delivery. After configuring your account, follow step 6 to check the dashboard template and the message on the recipient's phone.
+
+Actions uses [checkout v5](https://github.com/actions/checkout/tree/v5) and [setup-java v5](https://github.com/actions/setup-java/tree/v5). See the [contribution guide](CONTRIBUTING.md#understand-the-execution-boundary) for the distinction between the two workflows.
